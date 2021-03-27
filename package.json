@@ -1,0 +1,11 @@
+{
+  "name": "araux",
+  "version": "1.0.0",
+  "description": "npm class-based package that contains multiple array methods",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alexander Khazzam",
+  "license": "ISC"
+}
