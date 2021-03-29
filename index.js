@@ -45,8 +45,8 @@ class Araux {
   };
 
   #modifyArrays = (t, i) => {
-    let r = true;
-    let tV = undefined;
+    let r = undefined,
+      tV = undefined;
     if (t === 'object') {
       for (const p in this.objectsProxy) {
         if (this.objectsProxy[p]) {
@@ -82,6 +82,9 @@ class Araux {
         break;
       }
     }
+    if (s === this.a1.length && s === this.a2.length) {
+      return true;
+    }
     return s;
   };
 
@@ -108,8 +111,8 @@ class Araux {
   };
 }
 
-const ar1 = [5, 5, { mike: 5 }, 6];
-const ar2 = [5, 5, { mike: 4 }, 6];
+const ar1 = [5, 5, { mike: 5, blob: 5 }, 5, 6];
+const ar2 = [5, 5, { mike: 5, g: 5 }, 5];
 
 const araux = new Araux();
 araux.unsimIdx(ar1, ar2, { values: true });
