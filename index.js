@@ -1,7 +1,6 @@
 class Araux {
   constructor() {
     this.objects = { properties: false, values: false, equal: false };
-    this.arrays = { properties: false, values: false, equal: false };
   }
 
   #proxyHandler = () => {
@@ -10,7 +9,7 @@ class Araux {
       set(o, p, v) {
         for (const prop in self.objects) {
           if (v && self.objects[prop]) {
-            throw new Error('Cannot have multiple true or number properties!');
+            throw new Error('Cannot have multiple true or number properties');
           }
         }
         o[p] = v;
@@ -20,14 +19,13 @@ class Araux {
   };
 
   #createProxy = () => {
-    this.arraysProxy = new Proxy(this.arrays, this.#proxyHandler());
     this.objectsProxy = new Proxy(this.objects, this.#proxyHandler());
   };
 
   #swapValues = (t, b) => {
-    for (const p in b ? this.objectsProxy : this.arraysProxy) {
+    for (const p in this.objectsProxy) {
       !t[p] ? (t[p] = false) : (t[p] = t[p]);
-      b ? (this.objectsProxy[p] = t[p]) : (this.arraysProxy[p] = t[p]);
+      this.objectsProxy[p] = t[p];
     }
   };
 
@@ -56,21 +54,21 @@ class Araux {
   #modifyArrays = (t, i) => {
     let r = undefined,
       tV = undefined;
-    if (t === 'object') {
-      for (const p in this.objectsProxy) {
-        if (this.objectsProxy[p]) {
-          tV = p;
-        }
+    for (const p in this.objectsProxy) {
+      if (this.objectsProxy[p]) {
+        tV = p;
       }
-      if (tV) {
-        if (tV === 'properties') {
-          r = this.#checkProps(i);
-        } else if (tV === 'values') {
-          r = this.#checkVals(i);
-        } else {
-          r = this.#checkEquality(i);
-        }
+    }
+    if (tV) {
+      if (tV === 'properties') {
+        r = this.#checkProps(i);
+      } else if (tV === 'values') {
+        r = this.#checkVals(i);
+      } else {
+        r = this.#checkEquality(i);
       }
+    } else {
+      r = true;
     }
     return r;
   };
@@ -79,13 +77,16 @@ class Araux {
     let s = 0;
     for (let i = 0; i < this.a1.length; i++) {
       const t = typeof this.a1[i];
-      if (t === typeof this.a2[i] && (t === 'object' || t === 'array')) {
+      if (t === typeof this.a2[i] && t === 'object') {
         if (this.#modifyArrays(t, i)) {
           s++;
         } else {
           break;
         }
-      } else if (this.a1[i] === this.a2[i]) {
+      } else if (
+        this.a1[i] === this.a2[i] ||
+        this.#stringify(this.a1[i]) === this.#stringify(this.a2[i])
+      ) {
         s++;
       } else {
         break;
@@ -104,19 +105,32 @@ class Araux {
       properties: false,
       values: false,
       equal: false,
-    },
-    arrays = {
-      properties: false,
-      values: false,
-      equal: false,
     }
   ) => {
-    this.a1 = array1;
-    this.a2 = array2;
-    this.#createProxy();
-    this.#swapValues(objects, true);
-    this.#swapValues(arrays, false);
-    return this.#findIdx();
+    if (this.#stringify(objects) === '{}') {
+      throw new Error('Must include object configuration args');
+    }
+    const properties = Object.getOwnPropertyNames(objects);
+    const values = Object.values(objects);
+    for (let i = 0; i < values.length; i++) {
+      if (values[i] !== true || values[i] !== false) {
+        throw new Error('Property names MUST be a boolean');
+      }
+    }
+    if (
+      properties.includes('properties') &&
+      properties.includes('values') &&
+      properties.includes('equal') &&
+      properties.length === 3
+    ) {
+      this.a1 = array1;
+      this.a2 = array2;
+      this.#createProxy();
+      this.#swapValues(objects, true);
+      return this.#findIdx();
+    } else {
+      throw new Error('Arguments must ONLY be properties, values and equal');
+    }
   };
 }
 
