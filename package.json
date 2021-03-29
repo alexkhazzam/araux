@@ -6,6 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "arrays",
+    "array",
+    "index",
+    "sorting",
+    "retrieving indexes"
+  ],
   "author": "Alexander Khazzam",
   "license": "ISC"
 }
