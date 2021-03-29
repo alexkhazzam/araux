@@ -113,7 +113,7 @@ class Araux {
     const properties = Object.getOwnPropertyNames(objects);
     const values = Object.values(objects);
     for (let i = 0; i < values.length; i++) {
-      if (values[i] !== true || values[i] !== false) {
+      if (typeof values[i] !== 'boolean') {
         throw new Error('Property names MUST be a boolean');
       }
     }
