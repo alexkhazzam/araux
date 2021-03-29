@@ -1,6 +1,6 @@
 {
   "name": "araux",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "npm class-based package that contains multiple array methods",
   "main": "index.js",
   "scripts": {
