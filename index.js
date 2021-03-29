@@ -33,7 +33,12 @@ class Araux {
 
   #checkProps = (i) => {};
 
-  #checkVals = (i) => {};
+  #checkVals = (i) => {
+    return (
+      JSON.stringify(Object.values(this.a1[i])) ===
+        JSON.stringify(Object.values(this.a2[i])) || false
+    );
+  };
 
   #checkEquality = (i) => {
     return JSON.stringify(ar1[i]) === JSON.stringify(ar2[i]) || false;
@@ -103,10 +108,10 @@ class Araux {
   };
 }
 
-const ar1 = [5, 5, { mike: 5 }];
-const ar2 = [5, 5, { mike: 5 }];
+const ar1 = [5, 5, { mike: 5 }, 6];
+const ar2 = [5, 5, { mike: 4 }, 6];
 
 const araux = new Araux();
-araux.unsimIdx(ar1, ar2, { equal: true });
+araux.unsimIdx(ar1, ar2, { values: true });
 
 module.exports = Araux;
