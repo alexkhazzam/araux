@@ -26,8 +26,9 @@ class Araux {
 
   #swapValues = (t, b) => {
     for (const p in b ? this.objectsProxy : this.arraysProxy) {
+      !t[p] ? (t[p] = false) : (t[p] = t[p]);
+      b ? (this.objectsProxy[p] = t[p]) : (this.arraysProxy[p] = t[p]);
     }
-    console.log(this.arraysProxy);
   };
 
   #checkProps = (i) => {};
@@ -40,20 +41,23 @@ class Araux {
 
   #modifyArrays = (t, i) => {
     let r = true;
-    let tV;
+    let tV = undefined;
     if (t === 'object') {
       for (const p in this.objectsProxy) {
         if (this.objectsProxy[p]) {
-          tV = this.objectsProxy[p];
+          tV = p;
         }
       }
       if (tV) {
-        tV === 'properties' ? (r = this.#checkProps(i)) : null;
-        tV === 'values' ? (r = this.#checkVals(i)) : null;
-        tV === 'equal' ? (r = this.#checkEquality(i)) : null;
+        if (tV === 'properties') {
+          r = this.#checkProps(i);
+        } else if (tV === 'values') {
+          r = this.#checkVals(i);
+        } else {
+          r = this.#checkEquality(i);
+        }
       }
     }
-    r = tV;
     return r;
   };
 
@@ -82,7 +86,7 @@ class Araux {
     objects = {
       properties: false,
       values: false,
-      equal: true,
+      equal: false,
     },
     arrays = {
       properties: false,
