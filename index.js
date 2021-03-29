@@ -10,7 +10,7 @@ class Araux {
       set(o, p, v) {
         for (const prop in self.objects) {
           if (v && self.objects[prop]) {
-            throw new Error('Cannot have multiple true or number properties');
+            throw new Error('Cannot have multiple true or number properties!');
           }
         }
         o[p] = v;
@@ -31,17 +31,26 @@ class Araux {
     }
   };
 
-  #checkProps = (i) => {};
+  #checkProps = (i) => {
+    return (
+      this.#stringify(Object.getOwnPropertyNames(this.a1[i])) ===
+        this.#stringify(Object.getOwnPropertyNames(this.a2[i])) || false
+    );
+  };
+
+  #stringify = (e) => {
+    return JSON.stringify(e);
+  };
 
   #checkVals = (i) => {
     return (
-      JSON.stringify(Object.values(this.a1[i])) ===
-        JSON.stringify(Object.values(this.a2[i])) || false
+      this.#stringify(Object.values(this.a1[i])) ===
+        this.#stringify(Object.values(this.a2[i])) || false
     );
   };
 
   #checkEquality = (i) => {
-    return JSON.stringify(ar1[i]) === JSON.stringify(ar2[i]) || false;
+    return this.#stringify(ar1[i]) === this.#stringify(ar2[i]) || false;
   };
 
   #modifyArrays = (t, i) => {
@@ -107,14 +116,8 @@ class Araux {
     this.#createProxy();
     this.#swapValues(objects, true);
     this.#swapValues(arrays, false);
-    console.log(this.#findIdx());
+    return this.#findIdx();
   };
 }
-
-const ar1 = [5, 5, { mike: 5, blob: 5 }, 5, 6];
-const ar2 = [5, 5, { mike: 5, g: 5 }, 5];
-
-const araux = new Araux();
-araux.unsimIdx(ar1, ar2, { values: true });
 
 module.exports = Araux;
