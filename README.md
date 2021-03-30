@@ -1,7 +1,8 @@
 # araux
 
 ```javascript
-const araux = require('araux');
+const Araux = require('araux');
+const araux = new Araux();
 
 const array1 = [1, 5, 7, 8, { name: 'Alex' }, 6];
 const array2 = [1, 5, 7, 8, { name: 'Bob' }, 6];
